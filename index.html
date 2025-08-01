@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Kiosco Mundo Juvenil</title>
+  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 1080px;
+      height: 1920px;
+      font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', cursive, sans-serif;
+      background: radial-gradient(circle at center, #1a4dbe, #062b61);
+      color: white;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      margin-top: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 70px;
+      color: #ffe600;
+      text-shadow: 2px 2px 4px #000;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-size: 38px;
+      display: block;
+      margin: 20px 0 10px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      font-size: 36px;
+      padding: 20px;
+      border-radius: 20px;
+      border: none;
+      background: #9be1fb;
+      color: #000;
+      box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .counter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 30px 0;
+    }
+
+    .counter label {
+      flex: 1;
+      font-size: 38px;
+    }
+
+    .counter-controls {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .counter button {
+      font-size: 48px;
+      padding: 20px 30px;
+      margin: 0 20px;
+      border-radius: 50%;
+      border: none;
+      background: #ff5e57;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .counter button:hover {
+      transform: scale(1.1);
+    }
+
+    .counter span {
+      font-size: 48px;
+      min-width: 60px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .section {
+      margin-top: 40px;
+    }
+
+    .section label {
+      display: block;
+      margin-bottom: 15px;
+      font-size: 36px;
+    }
+
+    .section input[type="radio"] {
+      transform: scale(1.5);
+      margin-right: 15px;
+    }
+
+    .option {
+      margin-bottom: 20px;
+    }
+
+    .datos-fields {
+      display: none;
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 20px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 30px;
+      font-size: 48px;
+      background: #00c853;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      margin-top: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+
+    .submit-btn:hover {
+      transform: scale(1.03);
+    }
+
+    .emoji {
+      font-size: 42px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎫 Comprar Boletos</h1>
+
+    <label for="cedula">🆔 Cédula:</label>
+    <input type="text" id="cedula" name="cedula" placeholder="Ej: 1234567890">
+
+    <div class="counter">
+      <label><span class="emoji">👶</span>Niños:</label>
+      <div class="counter-controls">
+        <button onclick="changeCount('niños', -1)">−</button>
+        <span id="niños">0</span>
+        <button onclick="changeCount('niños', 1)">+</button>
+      </div>
+    </div>
+
+    <div class="counter">
+      <label><span class="emoji">🧑</span>Adultos:</label>
+      <div class="counter-controls">
+        <button onclick="changeCount('adultos', -1)">−</button>
+        <span id="adultos">0</span>
+        <button onclick="changeCount('adultos', 1)">+</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>👤 Tipo de Cliente:</label>
+      <div class="option"><input type="radio" name="cliente" value="final" onclick="toggleDatos(false)" checked> Consumidor Final</div>
+      <div class="option"><input type="radio" name="cliente" value="datos" onclick="toggleDatos(true)"> Ingresar Datos</div>
+    </div>
+
+    <div class="datos-fields" id="datos-fields">
+      <label for="nombre">Nombre o Razón Social:</label>
+      <input type="text" id="nombre" name="nombre">
+
+      <label for="ruc">RUC/Cédula:</label>
+      <input type="text" id="ruc" name="ruc">
+
+      <label for="direccion">Dirección:</label>
+      <input type="text" id="direccion" name="direccion">
+    </div>
+
+    <div class="section">
+      <label>💳 Método de Pago:</label>
+      <div class="option"><input type="radio" name="metodo_pago" value="caja" checked> Acercarse a caja (efectivo)</div>
+      <div class="option"><input type="radio" name="metodo_pago" value="tarjeta"> Tarjeta en el kiosco</div>
+    </div>
+
+    <button class="submit-btn">✅ Confirmar y Continuar</button>
+  </div>
+
+  <script>
+    let counts = { niños: 0, adultos: 0 };
+
+    function changeCount(tipo, delta) {
+      counts[tipo] = Math.max(0, counts[tipo] + delta);
+      document.getElementById(tipo).textContent = counts[tipo];
+    }
+
+    function toggleDatos(show) {
+      document.getElementById('datos-fields').style.display = show ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>
